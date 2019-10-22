@@ -65,7 +65,7 @@ class Scene {
     };
 
     this.enterRoom = () => {
-      return (this.name + '\n' + this.description)
+      return (this.name + '\n\n' + this.description)
     }
   }
 }
@@ -90,7 +90,7 @@ const commands = {
 }
 
 //items definitions
-const flower = new InventoryItem('flower', 'the flower appears to be a hydrangea piniculata', true, () => { console.log('The flower smells beautiful...'); player.inventory.pop(flower) });
+const flower = new InventoryItem('flower', 'The flower appears to be a hydrangea piniculata', true, () => { console.log('The flower smells beautiful...'); player.inventory.pop(flower) });
 const beer = new InventoryItem('beer', 'an ice cold beer... ', true, () => { console.log('Dang that is a tasty beer...'); player.inventory.pop(beer) });
 const doorbell = new InventoryItem('doorbell', 'a golden glowing doorbell', false, () => {
   console.log("The doorbell sounds.\nYour wife comes to unlock the door -- but the door wasn't even locked.\n She is steaming pissed.\n You die.");
@@ -99,9 +99,9 @@ const doorbell = new InventoryItem('doorbell', 'a golden glowing doorbell', fals
 const paper = new InventoryItem('paper', 'a folded piece of paper. It says 05462 right -- could this be the key code?', true, () => { console.log('I think you found the key code!...'); player.inventory.pop(paper) });
 
 //room definitions
-const driveway = new Scene('Driveway...', 'You are standing in the driveway.\nAll the inside lights are off in the house.\nThe road stretches behind and to the left of you.\nTo the right of you is the garden.\nIn front of you the loan light on the front porch beckons you...\n ', null, 'front porch', null, 'garden', null);
+const driveway = new Scene('Driveway...', 'You are standing in the driveway.\nAll the inside lights are off in the house.\nThe road stretches behind and to the left of you.\nTo the right of you is the garden.\nIn front of you a single light on the front porch beckons you...\n ', null, 'front porch', null, 'garden', null);
 const frontPorch = new Scene('Front Porch...', 'You stand on the front porch.\nBehind you is driveway.\nDarkness to the right\nTo the left of you is the back patio.\nIn front of you the door has a key code -- If you knew the code you could enter it.\nYou see the doorbell which is an inticing option - but to ring it would mean certain death... it is too dangerous.\n', [doorbell], null, 'driveway', 'kitchen', 'patio');
-const garden = new Scene('Garden...', 'You arrive in the garden to find a beautiful display of shrubs and hardy perenials.\nYou consider taking a flower.\nDarkness surrounds you.\nYour only chance of finding the key is going left back to the driveway...\n ', [flower], null, null, null, 'driveway');
+const garden = new Scene('Garden...', 'You arrive in the garden to find a beautiful display of shrubs and hardy perenials.\nYou consider taking a flower.\nDarkness surrounds you.\nIt would be dangerous to go any direction except left back to the driveway...\n ', [flower], null, null, null, 'driveway');
 const patio = new Scene('Patio...', 'You reach the back patio.\nIn front of you is the steep dropoff from retaining wall.\nBehind you is the front porch.\nYou see a folded piece of paper wedged next to the leg of the grill.\nCould this be the key code?...\n ', [paper], null, null, 'front porch', null);
 const kitchen = new Scene('Kitchen...', "Success! You cracked the code.\nIn the refridgerator there is a beer waiting for you\nBehind you is the front porch....\n", [beer], null, 'front porch', null, null);
 
@@ -126,14 +126,14 @@ const scenesTable = {
 //------------Game------------------
 
 async function startGame() {
-  let init = await ask(`Welcome.\nYou've just arrived home from a long night of coding to discover your front door in locked.\nIf you ring the doorbell you'll wakeup your wife -- which would mean certain death.\nThis is a text based adventure game to find the secret key code, enter the kitchen, and drink a beer!\nPlease type your actions in the format [action] [item].\nTo move to a new area use [move] [direction].\nTo view your inventory type 'inventory' to view the room's items type 'items'\nAre you ready to begin?\n>_ `);
+  let init = await ask(`Welcome.\n\nYou've just arrived home from a long night of coding to discover your front door in locked.\nIf you ring the doorbell you'll wakeup your wife -- which would mean certain death.\nThis is a text based adventure game to find the secret key code, enter the kitchen, and drink a beer!\n\nPlease type your actions in the format [action] [item].\nTo move to a new area use [move] [forward, backward, right, left].\nTo view your inventory type 'inventory' to view the room's items type 'items'\n\nAre you ready to begin?\n>_ `);
   if (commands.affirmative.includes(init.toLowerCase())) {
     console.log(driveway.enterRoom());
     player.currentScene = driveway
     play()
   }
   else {
-    console.log('Goodbye...');
+    console.log("Fine! I didn't want to play either! ");
     process.exit()
   }
 
@@ -181,7 +181,7 @@ async function play() {
     else {
       let direction = stash;
       if (player.currentScene[direction]) {
-        console.log(`Moving ${direction}...`);
+        console.log(`Moving ${direction}...\n`);
         player.changeScene(scenesTable[player.currentScene[direction]]);
         console.log(player.currentScene.enterRoom())
         play();
@@ -189,6 +189,14 @@ async function play() {
       else if (direction !== 'forward' && direction !== 'backward' && direction !== 'right' && direction !== 'left') {
         console.log("That's not a valid command\nPlease choose forward, backward, right, or left");
         play()
+      }      
+      else if (currentScene = patio && direction === 'forward') {
+        console.log("You fall off the retaining wall and die");
+        process.exit()
+      }
+      else if (currentScene = garden && direction !== 'left') {
+        console.log("\nOhhhhhhhh farts! You accidentally step on a stick causing a loud crack.\n A light turns on in the bedroom.\n You've awoken your wife.\n You die. ");
+        process.exit()
       }
       else {
         console.log("You can't go that way...")
