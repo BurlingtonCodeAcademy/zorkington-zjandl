@@ -191,7 +191,7 @@ async function play() {
         play()
       }      
       else if (currentScene = patio && direction === 'forward') {
-        console.log("You fall off the retaining wall and die");
+        console.log("You trip and fall\n Making a loud noise.\n Your wife wakes up.\n You die");
         process.exit()
       }
       else if (currentScene = garden && direction !== 'left') {
