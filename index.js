@@ -21,7 +21,7 @@ const player = {
   inventory: [],
   status: [],
 
-  //move
+  //move and traps
   changeScene: (room) => {
     player.currentScene = room
   },
