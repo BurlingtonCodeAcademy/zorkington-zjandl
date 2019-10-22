@@ -21,7 +21,7 @@ const player = {
   inventory: [],
   status: [],
 
-  //move and traps
+  //move
   changeScene: (room) => {
     player.currentScene = room
   },
@@ -86,7 +86,7 @@ const commands = {
   move: ['go', 'move', 'walk', 'enter', '05462'],
   examine: ['look', 'examine', 'check'],
   take: ['take', 'grab'],
-  use: ['use', 'give', 'drink', 'ring', 'smell'],
+  use: ['use', 'give', 'drink', 'ring', 'smell', 'read'],
 }
 
 //items definitions
@@ -96,7 +96,7 @@ const doorbell = new InventoryItem('doorbell', 'a golden glowing doorbell', fals
   console.log("The doorbell sounds.\nYour wife comes to unlock the door -- but the door wasn't even locked.\n She is steaming pissed.\n You die.");
   process.exit()
 });
-const paper = new InventoryItem('paper', 'a folded piece of paper. It says 05462 right -- could this be the key code?', true, () => { console.log('I think you found the key code!...'); player.inventory.pop(paper) });
+const paper = new InventoryItem('paper', 'a folded piece of paper. It says 05462 right -- could this be the key code?', true, () => { console.log('It says front door key code: (05462 right)...'); player.inventory.pop(paper) });
 
 //room definitions
 const driveway = new Scene('Driveway...', 'You are standing in the driveway.\nAll the inside lights are off in the house.\nThe road stretches behind and to the left of you.\nTo the right of you is the garden.\nIn front of you a single light on the front porch beckons you...\n ', null, 'front porch', null, 'garden', null);
@@ -172,7 +172,7 @@ async function play() {
     }
   }
 
-  //move
+  //movement and traps 
   else if (commands.move.includes(thisAction)) {
     if (inputArray.length === 1) {
       console.log('maybe you should just sleep in the car');
@@ -196,6 +196,10 @@ async function play() {
       }
       else if (currentScene = garden && direction !== 'left') {
         console.log("\nOhhhhhhhh farts! You accidentally step on a stick causing a loud crack.\n A light turns on in the bedroom.\n You've awoken your wife.\n You die. ");
+        process.exit()
+      }
+      else if (currentScene = driveway && direction === 'left'|| 'backward') {
+        console.log("\nYou get hit by oncoming traffic.\nYou die. ");
         process.exit()
       }
       else {
